@@ -1,0 +1,60 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="demo_hard.SallerWindow"
+        x:CompileBindings="False"
+        Title="SallerWindow">
+    <DockPanel>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" DockPanel.Dock="Top" Margin="5">
+            <TextBlock Text="Добро пожаловать в окно создания заказа"/>
+        </StackPanel>
+        <StackPanel DockPanel.Dock="Left" Orientation="Vertical" VerticalAlignment="Center" Margin="5">
+            <TextBox x:Name="SearchBox" Width="200" TextChanged="SearchBox_Changed"/>
+            <ListBox x:Name="SearchResultsListBox">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}"/> 
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </StackPanel>
+        <StackPanel VerticalAlignment="Center" Orientation="Vertical" Margin="5">
+            <TextBlock Text="Номер заказа" Margin="5" HorizontalAlignment="Center"/>
+            <AutoCompleteBox x:Name="CompleteBox" FilterMode="StartsWith" Width="200" HorizontalAlignment="Center" Margin="5"/>
+            <TextBlock Text="Сделать штрих кода надо" Margin="5" HorizontalAlignment="Center"/>
+            
+            <ComboBox x:Name="Clients_ComboBox" Width="200" SelectionChanged="Clients_ComboBox_SelectionChanged" HorizontalAlignment="Center" Margin="5">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Fio}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+            
+            <ComboBox x:Name="Service_Combobox" Width="200" SelectionChanged="Service_Combobox_SelectionChanged" HorizontalAlignment="Center" Margin="5">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding ServiceName}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+            
+            <Button Content="Добавить услугу" Click="AddService_Button" HorizontalAlignment="Center" Margin="5"/>
+            
+            <ListBox x:Name="SelectedServicesListBox" Width="200" Height="100" HorizontalAlignment="Center" Margin="5">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}"/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
+            <Button Content="Назад" Click="Go_Back_Button" HorizontalAlignment="Center" Margin="5"/>
+            <Button Content="Создать штрих код" HorizontalAlignment="Center" Margin="5"/>
+            <Button Content="Добавить Пользователя" Click="AddUser_Button" HorizontalAlignment="Center" Margin="5"/>
+            <Button Content="Создать заказ" Click = "Create_Order" HorizontalAlignment="Center" Margin="5"/>
+        </StackPanel>
+    </DockPanel>
+</Window>

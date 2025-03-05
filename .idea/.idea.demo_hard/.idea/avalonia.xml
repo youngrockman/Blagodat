@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AvaloniaProject">
+    <option name="projectPerEditor">
+      <map>
+        <entry key="demo_hard/AddClient.axaml" value="demo_hard/demo_hard.csproj" />
+        <entry key="demo_hard/FunctionWindow.axaml" value="demo_hard/demo_hard.csproj" />
+        <entry key="demo_hard/HistoryWindow.axaml" value="demo_hard/demo_hard.csproj" />
+        <entry key="demo_hard/MainWindow.axaml" value="demo_hard/demo_hard.csproj" />
+        <entry key="demo_hard/Order.axaml" value="demo_hard/demo_hard.csproj" />
+        <entry key="demo_hard/SallerWindow.axaml" value="demo_hard/demo_hard.csproj" />
+      </map>
+    </option>
+  </component>
+</project>

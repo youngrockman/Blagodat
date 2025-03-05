@@ -1,0 +1,40 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="1000"
+        x:Class="demo_hard.HistoryWindow"
+        x:CompileBindings="False"
+        Title="История входов">
+
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Top" HorizontalAlignment="Center" Orientation="Horizontal" Margin="5">
+            <TextBlock HorizontalAlignment="Center" Text="Окно истории входа" Margin="5"/>
+            <ComboBox x:Name="LoginComboBox" Width="200" SelectionChanged="LoginCombobox_OnSelectedChanged"/>
+            <ComboBox x:Name="SortComboBox" Width="200" SelectionChanged="SortComboBox_OnSelectedChanged"/>
+            <Button Content="Сортировать" Click="SortButton_OnClick" Width="150" Margin="5"/>
+        </StackPanel>
+
+        <StackPanel>
+            <ListBox x:Name="LastEnterBox">
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Columns="1"/>
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Border BorderThickness="1" Padding="5" Margin="5">
+                            <StackPanel HorizontalAlignment="Center" Spacing="5">
+                                <TextBlock Text="{Binding Login}"/>
+                                <TextBlock Text="{Binding EnterDatetime}"/>
+                                <TextBlock Text="{Binding EnterType}"/>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </StackPanel>
+    </DockPanel>
+
+</Window>

@@ -1,0 +1,41 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="demo_hard.Order"
+        x:CompileBindings="True"
+        Title="Order">
+        
+    <StackPanel Margin="10" VerticalAlignment="Center" Orientation="Vertical">
+        <TextBlock Text="Информация о заказе" FontSize="20" HorizontalAlignment="Center" Margin="10"/>
+        
+        <TextBlock Text="Номер заказа:"/>
+        <TextBlock x:Name="OrderNumberText" Margin="5"/>
+
+        <TextBlock Text="Код клиента:"/>
+        <TextBlock x:Name="ClientCodeText" Margin="5"/>
+                
+        <TextBlock Text="Время заказа:"/>
+        <TextBlock x:Name="DateTimeBox" Margin="5"/>
+
+        <TextBlock Text="ФИО клиента:"/>
+        <TextBlock x:Name="ClientFioText" Margin="5"/>
+
+        <TextBlock Text="Адрес клиента:"/>
+        <TextBlock x:Name="ClientAddressText" Margin="5"/>
+
+        <TextBlock Text="Перечень услуг:"/>
+        <ListBox x:Name="ServicesListBox" Margin="5" Height="150">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding}"/>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <TextBlock Text="Стоимость:"/>
+        <TextBlock x:Name="TotalCostText" Margin="5"/>
+
+        <Button Content="Закрыть" HorizontalAlignment="Center" Margin="10" Click="CloseButton_Click"/>
+    </StackPanel>
+</Window>

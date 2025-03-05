@@ -1,0 +1,31 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="demo_hard.FunctionWindow"
+        x:CompileBindings="False"
+        Title="FunctionWindow">
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Top" HorizontalAlignment="Center" Orientation="Horizontal" >
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Image Source="{Binding Image}" Width="100" Height="100" Margin="5" HorizontalAlignment="Center"/>
+            </StackPanel>
+            <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                <TextBlock x:Name="Fio">
+                    <Run Text="ФИО:"/>
+                    <Run Text="{Binding Fio}"/>
+                </TextBlock>
+                <TextBlock>
+                    <Run Text="Роль:"/>
+                    <Run Text="{Binding RoleId}"/>
+                </TextBlock>
+                <Button Content="Назад" Click="Back_Button" Margin="5"/>
+                <Button Content="Создать заказ" Click="Next_Function_Button" Margin="5"/>
+                <Button Content="История входа" Click="History_Button" Margin="5" IsVisible="{Binding IsRole2}"/>
+                <TextBlock x:Name="SessionTimer" FontSize="16" Foreground="Red" HorizontalAlignment="Center" Margin="10"/>
+                <TextBlock Text="" HorizontalAlignment="Center" Margin="10" x:Name="WarningBlock"/>
+            </StackPanel>
+        </StackPanel>
+    </DockPanel>
+</Window>
