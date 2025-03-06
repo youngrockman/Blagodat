@@ -145,3 +145,7 @@ C:\Users\prdb\RiderProjects\Demochka\demo_hard\demo_hard\obj\Debug\net9.0\refint
 C:\Users\prdb\RiderProjects\Demochka\demo_hard\demo_hard\obj\Debug\net9.0\demo_hard.csproj.Up2Date
 C:\Users\prdb\RiderProjects\Demochka\demo_hard\demo_hard\obj\Debug\net9.0\demo_hard.genruntimeconfig.cache
 C:\Users\prdb\RiderProjects\Demochka\demo_hard\demo_hard\obj\Debug\net9.0\ref\demo_hard.dll
+C:\Users\prdb\RiderProjects\Demochka\demo_hard\demo_hard\bin\Debug\net9.0\xunit.abstractions.dll
+C:\Users\prdb\RiderProjects\Demochka\demo_hard\demo_hard\bin\Debug\net9.0\xunit.assert.dll
+C:\Users\prdb\RiderProjects\Demochka\demo_hard\demo_hard\bin\Debug\net9.0\xunit.core.dll
+C:\Users\prdb\RiderProjects\Demochka\demo_hard\demo_hard\bin\Debug\net9.0\xunit.execution.dotnet.dll
