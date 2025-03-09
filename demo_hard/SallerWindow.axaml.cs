@@ -28,7 +28,7 @@ public partial class SallerWindow : Window
         var OrderId = context.Orders.Max(o => o.Id) + 1;
         if (context.Orders.Any(o => o.Id == OrderId)) throw new ArgumentException("Номера Id не должны совпадать");
         if (OrderId < 1) throw new ArgumentException("OrderId must be greater than 1");
-        CompleteBox.ItemsSource = new string[] { OrderId.ToString() };
+        
     }
 
     private void LoadClients()
@@ -72,7 +72,7 @@ public partial class SallerWindow : Window
         {
             SelectedServices.Add(selectedService);
             UpdateServiceList();
-        } 
+        }
     }
 
     private void UpdateServiceList()
@@ -115,14 +115,41 @@ public partial class SallerWindow : Window
 
     private void Create_Order(object? sender, RoutedEventArgs e)
     {
-        string orderNumber = CompleteBox.SelectedItem.ToString();  
-        Client selectedClient = Clients_ComboBox.SelectedItem as Client;
-        List<Service> selectedServices = new List<Service>(SelectedServices);
-
-        if (selectedClient != null && !string.IsNullOrEmpty(orderNumber) && selectedServices.Any())
+        if (Clients_ComboBox.SelectedItem is not Client selectedClient ||
+            !SelectedServices.Any() ||
+            !int.TryParse(Duration.Text, out int duration))
         {
-            new Order(orderNumber, selectedClient, selectedServices).ShowDialog(this);
+            Console.WriteLine("Ошибка: Не все данные выбраны корректно.");
+            return;
         }
+
+        using var context = new User2Context();
+
+        var lastOrderId = context.Orders.Any() ? context.Orders.Max(o => o.Id) : 0;
+
+        foreach (var service in SelectedServices)
+        {
+            var newOrder = new demo_hard.Models.Order
+            {
+                Id = lastOrderId + 1,
+                OrderCode = $"{selectedClient.ClientCode}/{DateTime.Now:dd/MM/yyyy}",
+                OrderDate = DateOnly.FromDateTime(DateTime.Now),
+                OrderTime = TimeOnly.FromDateTime(DateTime.Now),
+                ClientCode = selectedClient.ClientCode,
+                ServiceId = service.Id,
+                Status = "Новая",
+                DateClose = null,
+                RentalTime = duration
+            };
+
+            context.Orders.Add(newOrder);
+            context.SaveChanges();
+
+            lastOrderId++; 
+        }
+
         
+        new Order(selectedClient, SelectedServices, duration).ShowDialog(this);
     }
 }
+

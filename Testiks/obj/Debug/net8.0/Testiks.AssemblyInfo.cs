@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Testiks")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8708167f350f0cee2641552a4606b22fce6f3410")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b1d74544a6e6128c6946ccd76c76daa69f00a441")]
 [assembly: System.Reflection.AssemblyProductAttribute("Testiks")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Testiks")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

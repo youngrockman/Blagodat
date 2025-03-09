@@ -15,31 +15,27 @@ public partial class Order: Window
     {
         InitializeComponent();
     }
-    public Order(string orderNumber, Client client, List<Service> selectedServices)
+    public Order(Client selectedClient, List<Service> selectedServices, int duration)
     {
         InitializeComponent();
-        
-        OrderNumberText.Text=orderNumber;
-        ClientCodeText.Text = client.Id.ToString();
-        ClientFioText.Text = client.Fio;
-        ClientAddressText.Text = client.Address;
-        ServicesListBox.ItemsSource = selectedServices.Select(s => s.ServiceName).ToList();
-        DateTimeBox.Text = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
-        decimal totalPrice = selectedServices.Sum(s => 
-        {
-            decimal serviceCost = decimal.TryParse(s.ServiceCost, out var cost) ? cost : 0;
-            return serviceCost;
-        });
 
+        OrderNumberText.Text = GenerateOrderNumber(selectedClient);
+        ClientCodeText.Text = selectedClient.ClientCode.ToString();
+        ClientFioText.Text = selectedClient.Fio;
+        ClientAddressText.Text = selectedClient.Address;
+        DateTimeBox.Text = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
+        ServicesListBox.ItemsSource = selectedServices.Select(s => s.ServiceName).ToList();
+        
+        decimal totalPrice = selectedServices.Sum(s => decimal.TryParse(s.ServiceCost, out var cost) ? cost : 0);
         TotalCostText.Text = $"${totalPrice:0.00}";
-        
-        
-        
     }
-    
-    
-    
-    
+
+    private string GenerateOrderNumber(Client client)
+    {
+        using var context = new User2Context();
+        int lastOrderId = context.Orders.Any() ? context.Orders.Max(o => o.Id) : 0;
+        return $"{client.ClientCode}/{DateTime.Now:ddMMyyyy}/{lastOrderId + 1}";
+    }
 
     private void CloseButton_Click(object? sender, RoutedEventArgs e)
     {
