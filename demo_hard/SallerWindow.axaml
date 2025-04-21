@@ -3,64 +3,91 @@
         x:Class="demo_hard.SallerWindow"
         x:CompileBindings="False"
         Title="Оформление заказа" 
-        Width="600" 
-        Height="500">
+        Width="650" 
+        Height="600">
     
-    <StackPanel Margin="15">
-        
-        <StackPanel Margin="0,0,0,10">
-            <TextBlock Text="Номер заказа:" FontWeight="Bold"/>
+    <StackPanel Margin="20">
+        <!-- Номер заказа -->
+        <StackPanel Margin="0,0,0,15">
+            <TextBlock Text="Номер заказа:" FontWeight="Bold" FontSize="14"/>
             <TextBox x:Name="OrderNumberBox" 
-                     Watermark="Автоматически"
-                     IsReadOnly="True"/>
+                     Watermark="Будет сгенерирован автоматически"
+                     IsReadOnly="True"
+                     FontSize="14"
+                     Padding="5"/>
         </StackPanel>
 
-        
-        <StackPanel Margin="0,0,0,10">
-            <TextBlock Text="Клиент:" FontWeight="Bold"/>
+        <!-- Клиент -->
+        <StackPanel Margin="0,0,0,15">
+            <TextBlock Text="Клиент:" FontWeight="Bold" FontSize="14"/>
             <DockPanel LastChildFill="True">
-                <Button Content="+" 
+                <Button Content="Добавить клиента" 
                         DockPanel.Dock="Right"
-                        Width="30"
-                        Margin="5,0,0,0"
-                        Click="AddClient_Click"/>
-                <ComboBox x:Name="ClientAutoComplete"
-                          ItemsSource="{Binding Clients}"
+                        Margin="10,0,0,0"
+                        Padding="10,5"
+                        Click="AddClientButtonClick"/>
+                <ComboBox ItemsSource="{Binding Clients}"
+                          SelectedItem="{Binding SelectedClient}"
                           DisplayMemberBinding="{Binding Fio}"
-                          SelectedItem="{Binding SelectedClient}"/>
+                          FontSize="14"
+                          Padding="5"/>
             </DockPanel>
         </StackPanel>
 
-        
-        <StackPanel Margin="0,0,0,10">
-            <TextBlock Text="Услуги:" FontWeight="Bold"/>
-            <DockPanel LastChildFill="True">
-                <Button Content="Добавить" 
+        <!-- Услуги -->
+        <StackPanel Margin="0,0,0,15">
+            <TextBlock Text="Услуги:" FontWeight="Bold" FontSize="14"/>
+            <DockPanel LastChildFill="True" Margin="0,0,0,10">
+                <Button Content="Добавить услугу" 
                         DockPanel.Dock="Right"
-                        Margin="5,0,0,0"
-                        Click="AddService_Click"/>
-                <ComboBox x:Name="ServiceAutoComplete"
-                          ItemsSource="{Binding Services}"
+                        Margin="10,0,0,0"
+                        Padding="10,5"
+                        Click="AddServiceButtonClick"/>
+                <ComboBox ItemsSource="{Binding Services}"
+                          SelectedItem="{Binding SelectedService}"
                           DisplayMemberBinding="{Binding ServiceName}"
-                          SelectedItem="{Binding SelectedService}"/>
+                          FontSize="14"
+                          Padding="5"/>
             </DockPanel>
             
-           
-            <TextBlock Text="Выбранные услуги:" Margin="0,10,0,5"/>
-            <ListBox x:Name="SelectedServicesList" 
-                     Height="150"
-                     ItemsSource="{Binding SelectedServices}">
+            <!-- Время аренды -->
+            <StackPanel Margin="0,0,0,10" Orientation="Horizontal" VerticalAlignment="Center">
+                <TextBlock Text="Время аренды (минуты):" 
+                          Margin="0,0,10,0"
+                          FontSize="14"/>
+                <TextBox Text="{Binding SelectedRentTime}" 
+                         Width="100"
+                         FontSize="14"
+                         Padding="5"/>
+            </StackPanel>
+            
+            <!-- Список выбранных услуг -->
+            <TextBlock Text="Выбранные услуги:" 
+                      Margin="0,0,0,5"
+                      FontWeight="Bold"
+                      FontSize="14"/>
+            <ListBox Height="180"
+                     ItemsSource="{Binding SelectedServices}"
+                     FontSize="14">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <Grid ColumnDefinitions="*,100,Auto">
-                            <TextBlock Text="{Binding ServiceName}" VerticalAlignment="Center"/>
-                            <TextBlock Text="{Binding CostPerHour, StringFormat='{}{0:C}'}" 
+                        <Grid ColumnDefinitions="*,100,80,80,Auto" Margin="0,5">
+                            <TextBlock Text="{Binding ServiceName}" 
+                                     VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding CostPerHour, StringFormat='{}{0:C} / час'}" 
                                      Grid.Column="1" 
                                      TextAlignment="Right"/>
-                            <Button Content="×" 
-                                    Grid.Column="2"
-                                    Width="25"
-                                    Click="RemoveService_Click"
+                            <TextBlock Text="{Binding RentTime, StringFormat='{}{0} мин'}" 
+                                     Grid.Column="2"
+                                     TextAlignment="Center"/>
+                            <TextBlock Text="{Binding Status}" 
+                                     Grid.Column="3"
+                                     TextAlignment="Center"/>
+                            <Button Content="Удалить" 
+                                    Grid.Column="4"
+                                    Padding="10,2"
+                                    Margin="10,0,0,0"
+                                    Click="RemoveServiceButtonClick"
                                     CommandParameter="{Binding}"/>
                         </Grid>
                     </DataTemplate>
@@ -68,18 +95,22 @@
             </ListBox>
         </StackPanel>
 
-        
+        <!-- Кнопка оформления -->
         <Button Content="Оформить заказ" 
                 HorizontalAlignment="Stretch"
-                Margin="0,15,0,0"
-                Padding="10"
-                Click="CreateOrder_Click"
+                Margin="0,20,0,0"
+                Padding="15,5"
+                Click="CreateOrderButtonClick"
                 Background="#4CAF50"
-                Foreground="White"/>
+                Foreground="White"
+                FontSize="14"
+                FontWeight="Bold"/>
 
-        
+        <!-- Статус -->
         <TextBlock x:Name="StatusText" 
                    Foreground="Red"
-                   TextWrapping="Wrap"/>
+                   TextWrapping="Wrap"
+                   Margin="0,10,0,0"
+                   FontSize="14"/>
     </StackPanel>
 </Window>

@@ -304,3 +304,7 @@ C:\Users\IVAN\RiderProjects\demo_hard\demo_hard\bin\Debug\net9.0\BouncyCastle.Cr
 C:\Users\IVAN\RiderProjects\demo_hard\demo_hard\bin\Debug\net9.0\itextsharp.dll
 C:\Users\IVAN\RiderProjects\demo_hard\demo_hard\bin\Debug\net9.0\DialogHost.Avalonia.dll
 C:\Users\IVAN\RiderProjects\demo_hard\demo_hard\bin\Debug\net9.0\MsBox.Avalonia.dll
+C:\Users\IVAN\RiderProjects\demo_hard\demo_hard\bin\Debug\net9.0\DynamicData.dll
+C:\Users\IVAN\RiderProjects\demo_hard\demo_hard\bin\Debug\net9.0\ReactiveUI.dll
+C:\Users\IVAN\RiderProjects\demo_hard\demo_hard\bin\Debug\net9.0\Splat.dll
+C:\Users\IVAN\RiderProjects\demo_hard\demo_hard\bin\Debug\net9.0\System.Reactive.dll

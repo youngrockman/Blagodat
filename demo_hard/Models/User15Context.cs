@@ -16,27 +16,26 @@ public partial class User15Context : DbContext
     }
 
     public virtual DbSet<Client> Clients { get; set; }
-
     public virtual DbSet<Employee> Employees { get; set; }
-
     public virtual DbSet<Order> Orders { get; set; }
-
     public virtual DbSet<Role> Roles { get; set; }
-
     public virtual DbSet<Service> Services { get; set; }
+    public virtual DbSet<OrderService> OrderServices { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseNpgsql("Host=45.67.56.214;Port=5421;USERNAME=user15;DATABASE=user15;Password=3XkvwMOb");
+    {
+        if (!optionsBuilder.IsConfigured)
+        {
+            optionsBuilder.UseNpgsql("Host=45.67.56.214;Port=5421;USERNAME=user15;DATABASE=user15;Password=3XkvwMOb");
+        }
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Client>(entity =>
         {
             entity.HasKey(e => e.ClientId).HasName("client_pk");
-
             entity.ToTable("client");
-
             entity.HasIndex(e => e.ClientCode, "client_unique").IsUnique();
 
             entity.Property(e => e.ClientId)
@@ -65,7 +64,6 @@ public partial class User15Context : DbContext
         modelBuilder.Entity<Employee>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("employees_pk");
-
             entity.ToTable("employees");
 
             entity.Property(e => e.Id)
@@ -95,7 +93,6 @@ public partial class User15Context : DbContext
         modelBuilder.Entity<Order>(entity =>
         {
             entity.HasKey(e => e.OrderId).HasName("orders_pk");
-
             entity.ToTable("orders");
 
             entity.Property(e => e.OrderId)
@@ -113,32 +110,14 @@ public partial class User15Context : DbContext
                 .HasColumnName("status");
             entity.Property(e => e.Time).HasColumnName("time");
 
-            entity.HasMany(d => d.Services).WithMany(p => p.Orders)
-                .UsingEntity<Dictionary<string, object>>(
-                    "OrderService",
-                    r => r.HasOne<Service>().WithMany()
-                        .HasForeignKey("ServiceId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("order_services_service_id_fkey"),
-                    l => l.HasOne<Order>().WithMany()
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("order_services_order_id_fkey"),
-                    j =>
-                    {
-                        j.HasKey("OrderId", "ServiceId").HasName("order_services_pkey");
-                        j.ToTable("order_services");
-                        j.IndexerProperty<int>("OrderId").HasColumnName("order_id");
-                        j.IndexerProperty<int>("ServiceId").HasColumnName("service_id");
-                    });
+            entity.HasMany(o => o.OrderServices)
+                  .WithOne(os => os.Order)
+                  .HasForeignKey(os => os.OrderId);
         });
 
         modelBuilder.Entity<Role>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("roles");
-
+            entity.HasNoKey().ToTable("roles");
             entity.Property(e => e.RoleId).HasColumnName("role_id");
             entity.Property(e => e.RoleName)
                 .HasColumnType("character varying")
@@ -148,9 +127,7 @@ public partial class User15Context : DbContext
         modelBuilder.Entity<Service>(entity =>
         {
             entity.HasKey(e => e.ServiceId).HasName("services_pk");
-
             entity.ToTable("services");
-
             entity.HasIndex(e => e.ServiceCode, "services_unique").IsUnique();
 
             entity.Property(e => e.ServiceId)
@@ -163,6 +140,30 @@ public partial class User15Context : DbContext
             entity.Property(e => e.ServiceName)
                 .HasColumnType("character varying")
                 .HasColumnName("service_name");
+
+            entity.HasMany(s => s.OrderServices)
+                  .WithOne(os => os.Service)
+                  .HasForeignKey(os => os.ServiceId);
+        });
+
+        modelBuilder.Entity<OrderService>(entity =>
+        {
+            entity.HasKey(os => new { os.OrderId, os.ServiceId });
+            entity.ToTable("order_services");
+
+            entity.Property(os => os.OrderId).HasColumnName("order_id");
+            entity.Property(os => os.ServiceId).HasColumnName("service_id");
+            entity.Property(os => os.RentTime).HasColumnName("rent_time");
+
+            entity.HasOne(os => os.Order)
+                  .WithMany(o => o.OrderServices)
+                  .HasForeignKey(os => os.OrderId)
+                  .HasConstraintName("order_services_order_id_fkey");
+
+            entity.HasOne(os => os.Service)
+                  .WithMany(s => s.OrderServices)
+                  .HasForeignKey(os => os.ServiceId)
+                  .HasConstraintName("order_services_service_id_fkey");
         });
 
         OnModelCreatingPartial(modelBuilder);

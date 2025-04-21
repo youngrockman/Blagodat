@@ -26,6 +26,7 @@
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.10" />
+        <PackageReference Include="ReactiveUI" Version="20.2.45" />
         <PackageReference Include="xunit" Version="2.9.3" />
     </ItemGroup>
 </Project>
