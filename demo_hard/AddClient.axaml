@@ -28,9 +28,9 @@
                <TextBlock Text="Введите пароль" VerticalAlignment="Center" Margin="5" Width="200"/>
                <TextBox x:Name="PasswordBox" VerticalAlignment="Center" Margin="5" Width="200"/>
                <Button Content="Добавить пользователя" HorizontalAlignment="Center" Margin="5" Width="200" Click="AddClient_OnClick"/>
+               <Button Content="Назад" HorizontalAlignment="Center" Margin="5" Width="200" Click="BackOnOrder"/>
                <TextBlock Text="" x:Name="UserAdd" VerticalAlignment="Center" Margin="200" Width="200"/>
                <TextBlock Text="" x:Name="UserNotAdd" VerticalAlignment="Center" Margin="200" Width="200"/>
-               <Button Content="Назад" HorizontalAlignment="Center" Margin="5" Width="200" Click="BackOnOrder"/>
            </StackPanel>
        </DockPanel>
 </Window>

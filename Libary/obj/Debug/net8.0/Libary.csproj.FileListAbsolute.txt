@@ -1,0 +1,13 @@
+C:\Users\IVAN\RiderProjects\demo_hard\Libary\bin\Debug\net8.0\Libary.deps.json
+C:\Users\IVAN\RiderProjects\demo_hard\Libary\bin\Debug\net8.0\Libary.dll
+C:\Users\IVAN\RiderProjects\demo_hard\Libary\bin\Debug\net8.0\Libary.pdb
+C:\Users\IVAN\RiderProjects\demo_hard\Libary\obj\Debug\net8.0\Libary.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\IVAN\RiderProjects\demo_hard\Libary\obj\Debug\net8.0\Libary.AssemblyInfoInputs.cache
+C:\Users\IVAN\RiderProjects\demo_hard\Libary\obj\Debug\net8.0\Libary.AssemblyInfo.cs
+C:\Users\IVAN\RiderProjects\demo_hard\Libary\obj\Debug\net8.0\Libary.csproj.CoreCompileInputs.cache
+C:\Users\IVAN\RiderProjects\demo_hard\Libary\obj\Debug\net8.0\Libary.dll
+C:\Users\IVAN\RiderProjects\demo_hard\Libary\obj\Debug\net8.0\refint\Libary.dll
+C:\Users\IVAN\RiderProjects\demo_hard\Libary\obj\Debug\net8.0\Libary.pdb
+C:\Users\IVAN\RiderProjects\demo_hard\Libary\obj\Debug\net8.0\ref\Libary.dll
+C:\Users\IVAN\RiderProjects\demo_hard\Libary\obj\Debug\net8.0\Libary.csproj.AssemblyReference.cache
+C:\Users\IVAN\RiderProjects\demo_hard\Libary\obj\Debug\net8.0\Avalonia\Resources.Inputs.cache

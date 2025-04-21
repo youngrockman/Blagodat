@@ -27,6 +27,9 @@ build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 [C:/Users/IVAN/RiderProjects/demo_hard/demo_hard/App.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
+[C:/Users/IVAN/RiderProjects/demo_hard/demo_hard/BarcodeWindow.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
 [C:/Users/IVAN/RiderProjects/demo_hard/demo_hard/FunctionWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 

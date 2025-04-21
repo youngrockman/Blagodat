@@ -14,85 +14,97 @@ public partial class AddClient : Window
     }
 
     private void AddClient_OnClick(object? sender, RoutedEventArgs e)
-    {
-        using var context = new User2Context();
+{
+    using var context = new User15Context();
 
-        if (string.IsNullOrWhiteSpace(FioBox.Text) ||
-            string.IsNullOrWhiteSpace(CodeBox.Text) ||
-            string.IsNullOrWhiteSpace(BirthdayBox.Text) ||
-            string.IsNullOrWhiteSpace(AddressBox.Text) ||
-            string.IsNullOrWhiteSpace(EmailBox.Text) ||
-            string.IsNullOrWhiteSpace(PassportBox.Text) ||
-            string.IsNullOrWhiteSpace(PasswordBox.Text)
-           )
+    if (string.IsNullOrWhiteSpace(FioBox.Text) ||
+        string.IsNullOrWhiteSpace(CodeBox.Text) ||
+        string.IsNullOrWhiteSpace(BirthdayBox.Text) ||
+        string.IsNullOrWhiteSpace(AddressBox.Text) ||
+        string.IsNullOrWhiteSpace(EmailBox.Text) ||
+        string.IsNullOrWhiteSpace(PassportBox.Text) ||
+        string.IsNullOrWhiteSpace(PasswordBox.Text))
+    {
+        UserNotAdd.Text = "Пожалуйста, заполните все поля!";
+        return;
+    }
+
+    try
+    {
+        CorrectInput();
+        
+        
+        var clientCode = Convert.ToInt32(CodeBox.Text);
+        if (context.Clients.Any(c => c.ClientCode == clientCode))
         {
-            UserNotAdd.Text = "Please fill all the fields!";
+            UserNotAdd.Text = "Клиент с таким кодом уже существует!";
             return;
         }
 
-        try
+        var NewClient = new Client
         {
-            CorrectInput();
-            var NewClient = new Client
-            {
-                Id = context.Clients.Count() + 1,
-                Fio = FioBox.Text,
-                ClientCode = Convert.ToInt32(CodeBox.Text),
-                Passport = PassportBox.Text,
-                Birthday = DateOnly.TryParse(BirthdayBox.Text, out var birthDate) ? birthDate : null,
-                Address = AddressBox.Text,
-                Email = EmailBox.Text,
-                Password = PasswordBox.Text,
-                RoleId = 1
-            };
-
-            context.Clients.Add(NewClient);
-            context.SaveChanges();
-
-            UserAdd.Text = "Client added successfully!";
-
-            FioBox.Text = "";
-            CodeBox.Text = "";
-            PassportBox.Text = "";
-            BirthdayBox.Text = "";
-            AddressBox.Text = "";
-            EmailBox.Text = "";
-            PasswordBox.Text = "";
-            PhoneBox.Text = "";
             
-            
+            Fio = FioBox.Text.Trim(),
+            ClientCode = clientCode,
+            Passport = PassportBox.Text.Trim(),
+            Birthday = DateOnly.Parse(BirthdayBox.Text), 
+            Address = AddressBox.Text.Trim(),
+            Email = EmailBox.Text.Trim(),
+            Password = PasswordBox.Text,
+            Role = 1
+        };
 
+        context.Clients.Add(NewClient);
+        context.SaveChanges();
 
-        }
-        catch
-        {
-            throw new ArgumentException("Если Марк посмотрит мой код поставьте 2");
-        }
-
+        UserAdd.Text = "Клиент успешно добавлен!";
+        ClearFields();
     }
-
-    private void CorrectInput()
+    catch (Exception ex)
     {
-        if (CodeBox.Text.Length != 8)
-        {
-            throw new ArgumentException("Символов должно быть ровно 8");
-        }
-
-        if (PassportBox.Text.Length != 10)
-        {
-            throw new ArgumentException("В паспорте 10 цифр");
-        }
-
-        if (!EmailBox.Text.Contains("@"))
-        {
-            throw new ArgumentException("Email must contain '@'!");
-        }
-
-        if (PhoneBox.Text.Length != 11)
-        {
-            throw new ArgumentException("Неккоректно введен номер телефона");
-        }
+        UserNotAdd.Text = $"Ошибка: {ex.Message}";
     }
+}
+
+private void ClearFields()
+{
+    FioBox.Text = "";
+    CodeBox.Text = "";
+    PassportBox.Text = "";
+    BirthdayBox.Text = "";
+    AddressBox.Text = "";
+    EmailBox.Text = "";
+    PasswordBox.Text = "";
+    PhoneBox.Text = "";
+}
+
+private void CorrectInput()
+{
+    if (!int.TryParse(CodeBox.Text, out _) || CodeBox.Text.Length != 8)
+    {
+        throw new ArgumentException("Код клиента должен быть 8-значным числом");
+    }
+
+    if (PassportBox.Text.Length != 10 || !PassportBox.Text.All(char.IsDigit))
+    {
+        throw new ArgumentException("Паспорт должен содержать ровно 10 цифр");
+    }
+
+    if (!EmailBox.Text.Contains("@") || !EmailBox.Text.Contains("."))
+    {
+        throw new ArgumentException("Email должен содержать '@' и '.'");
+    }
+
+    if (PhoneBox.Text.Length != 11 || !PhoneBox.Text.All(char.IsDigit))
+    {
+        throw new ArgumentException("Номер телефона должен содержать 11 цифр");
+    }
+
+    if (!DateOnly.TryParse(BirthdayBox.Text, out _))
+    {
+        throw new ArgumentException("Некорректный формат даты рождения");
+    }
+}
 
     private void BackOnOrder(object? sender, RoutedEventArgs e)
     {

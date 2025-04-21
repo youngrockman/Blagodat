@@ -2,39 +2,62 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="1000"
-        x:Class="demo_hard.HistoryWindow"
+        xmlns:local="clr-namespace:demo_hard"
+        mc:Ignorable="d" 
+        Width="700" Height="500"
         x:CompileBindings="False"
+        x:Class="demo_hard.HistoryWindow"
         Title="История входов">
 
-    <DockPanel>
-        <StackPanel DockPanel.Dock="Top" HorizontalAlignment="Center" Orientation="Horizontal" Margin="5">
-            <TextBlock HorizontalAlignment="Center" Text="Окно истории входа" Margin="5"/>
-            <ComboBox x:Name="LoginComboBox" Width="200" SelectionChanged="LoginCombobox_OnSelectedChanged"/>
-            <ComboBox x:Name="SortComboBox" Width="200" SelectionChanged="SortComboBox_OnSelectedChanged"/>
-            <Button Content="Сортировать" Click="SortButton_OnClick" Width="150" Margin="5"/>
+    <StackPanel Margin="10" Spacing="10">
+        
+        <StackPanel Orientation="Horizontal" Spacing="10">
+            <ComboBox x:Name="LoginComboBox" 
+                      Width="150"
+                      PlaceholderText="Все пользователи"/>
+            
+            <ComboBox x:Name="SortComboBox" 
+                      Width="150"
+                      SelectedIndex="0">
+                <ComboBoxItem>Сначала новые</ComboBoxItem>
+                <ComboBoxItem>Сначала старые</ComboBoxItem>
+            </ComboBox>
+            
+            <ComboBox x:Name="StatusComboBox" 
+                      Width="150"
+                      SelectedIndex="0">
+                <ComboBoxItem>Все статусы</ComboBoxItem>
+                <ComboBoxItem>Успешные</ComboBoxItem>
+                <ComboBoxItem>Неуспешно</ComboBoxItem>
+            </ComboBox>
+            
+            <Button Content="Сбросить" 
+                    x:Name="ResetButton"/>
         </StackPanel>
 
-        <StackPanel>
-            <ListBox x:Name="LastEnterBox">
-                <ListBox.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <UniformGrid Columns="1"/>
-                    </ItemsPanelTemplate>
-                </ListBox.ItemsPanel>
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <Border BorderThickness="1" Padding="5" Margin="5">
-                            <StackPanel HorizontalAlignment="Center" Spacing="5">
-                                <TextBlock Text="{Binding Login}"/>
-                                <TextBlock Text="{Binding EnterDatetime}"/>
-                                <TextBlock Text="{Binding EnterType}"/>
-                            </StackPanel>
-                        </Border>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-        </StackPanel>
-    </DockPanel>
+        
+        <ListBox x:Name="LastEnterBox" Height="350">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Margin="5" Spacing="3">
+                        <TextBlock Text="{Binding LastEnter, StringFormat='{}{0:dd.MM.yyyy HH:mm}'}" 
+                                   FontWeight="Bold"/>
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                            <TextBlock Text="{Binding Login}"/>
+                            <TextBlock Text="{Binding EnterStatus}" 
+                                       Foreground="{Binding EnterStatus, Converter={x:Static local:StatusToColorConverter.Instance}}"/>
+                        </StackPanel>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
 
+        
+        <TextBlock>
+            <Run Text=" Успешных:"/>
+            <Run Text="{Binding SuccessfulLoginsCount}"/>
+            <Run Text=" Неуспешных:"/>
+            <Run Text="{Binding FailedLoginsCount}"/>
+        </TextBlock>
+    </StackPanel>
 </Window>

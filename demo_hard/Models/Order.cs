@@ -5,21 +5,21 @@ namespace demo_hard.Models;
 
 public partial class Order
 {
-    public int Id { get; set; }
+    public int OrderId { get; set; }
 
-    public string OrderCode { get; set; } = null!;
+    public string? OrderCode { get; set; }
 
-    public DateOnly OrderDate { get; set; }
+    public TimeOnly? Time { get; set; }
 
-    public TimeOnly OrderTime { get; set; }
+    public DateOnly? EndDate { get; set; }
 
-    public int ClientCode { get; set; }
+    public int? RentTime { get; set; }
 
-    public int ServiceId { get; set; }
+    public DateOnly? StartDate { get; set; }
 
-    public string Status { get; set; } = null!;
+    public int? ClientId { get; set; }
 
-    public DateOnly? DateClose { get; set; }
+    public string? Status { get; set; }
 
-    public int RentalTime { get; set; }
+    public virtual ICollection<Service> Services { get; set; } = new List<Service>();
 }

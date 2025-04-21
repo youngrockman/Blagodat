@@ -23,8 +23,8 @@ public partial class MainWindow : Window
 
     private void AuthorizeButton(object? sender, RoutedEventArgs e)
     {
-        using var context = new User2Context();
-        var user = context.Employees.FirstOrDefault(it => it.EmployeLogin == LoginBox.Text && it.EmployePassword == PasswordBox.Text);
+        using var context = new User15Context();
+        var user = context.Employees.FirstOrDefault(it => it.Login == LoginBox.Text && it.Password == PasswordBox.Text);
 
         if (user != null)
         {

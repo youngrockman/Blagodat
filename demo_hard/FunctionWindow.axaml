@@ -18,7 +18,7 @@
                 </TextBlock>
                 <TextBlock>
                     <Run Text="Роль:"/>
-                    <Run Text="{Binding RoleId}"/>
+                    <Run Text="{Binding Role}"/>
                 </TextBlock>
                 <Button Content="Назад" Click="Back_Button" Margin="5"/>
                 <Button Content="Создать заказ" Click="Next_Function_Button" Margin="5"/>

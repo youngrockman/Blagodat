@@ -300,3 +300,7 @@ C:\Users\IVAN\RiderProjects\demo_hard\demo_hard\obj\Debug\net9.0\refint\Avalonia
 C:\Users\IVAN\RiderProjects\demo_hard\demo_hard\obj\Debug\net9.0\demo_hard.csproj.Up2Date
 C:\Users\IVAN\RiderProjects\demo_hard\demo_hard\obj\Debug\net9.0\demo_hard.genruntimeconfig.cache
 C:\Users\IVAN\RiderProjects\demo_hard\demo_hard\obj\Debug\net9.0\ref\demo_hard.dll
+C:\Users\IVAN\RiderProjects\demo_hard\demo_hard\bin\Debug\net9.0\BouncyCastle.Cryptography.dll
+C:\Users\IVAN\RiderProjects\demo_hard\demo_hard\bin\Debug\net9.0\itextsharp.dll
+C:\Users\IVAN\RiderProjects\demo_hard\demo_hard\bin\Debug\net9.0\DialogHost.Avalonia.dll
+C:\Users\IVAN\RiderProjects\demo_hard\demo_hard\bin\Debug\net9.0\MsBox.Avalonia.dll

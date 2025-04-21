@@ -1,10 +1,16 @@
 {
   "version": 2,
-  "dgSpecHash": "BJD4B3fvfRg=",
+  "dgSpecHash": "w9bAQ2oIZQw=",
   "success": true,
   "projectFilePath": "C:\\Users\\IVAN\\RiderProjects\\demo_hard\\Testiks\\Testiks.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\IVAN\\.nuget\\packages\\avalonia\\11.1.3\\avalonia.11.1.3.nupkg.sha512",
+    "C:\\Users\\IVAN\\.nuget\\packages\\avalonia.buildservices\\0.0.29\\avalonia.buildservices.0.0.29.nupkg.sha512",
+    "C:\\Users\\IVAN\\.nuget\\packages\\avalonia.remote.protocol\\11.1.3\\avalonia.remote.protocol.11.1.3.nupkg.sha512",
     "C:\\Users\\IVAN\\.nuget\\packages\\coverlet.collector\\6.0.0\\coverlet.collector.6.0.0.nupkg.sha512",
+    "C:\\Users\\IVAN\\.nuget\\packages\\dialoghost.avalonia\\0.8.1\\dialoghost.avalonia.0.8.1.nupkg.sha512",
+    "C:\\Users\\IVAN\\.nuget\\packages\\messagebox.avalonia\\3.2.0\\messagebox.avalonia.3.2.0.nupkg.sha512",
+    "C:\\Users\\IVAN\\.nuget\\packages\\microcom.runtime\\0.11.0\\microcom.runtime.0.11.0.nupkg.sha512",
     "C:\\Users\\IVAN\\.nuget\\packages\\microsoft.codecoverage\\17.8.0\\microsoft.codecoverage.17.8.0.nupkg.sha512",
     "C:\\Users\\IVAN\\.nuget\\packages\\microsoft.net.test.sdk\\17.8.0\\microsoft.net.test.sdk.17.8.0.nupkg.sha512",
     "C:\\Users\\IVAN\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",

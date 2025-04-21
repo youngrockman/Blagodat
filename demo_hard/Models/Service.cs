@@ -5,11 +5,13 @@ namespace demo_hard.Models;
 
 public partial class Service
 {
-    public int Id { get; set; }
+    public string? ServiceName { get; set; }
 
-    public string ServiceName { get; set; } = null!;
+    public int? CostPerHour { get; set; }
 
     public string ServiceCode { get; set; } = null!;
 
-    public string ServiceCost { get; set; } = null!;
+    public int ServiceId { get; set; }
+
+    public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 }

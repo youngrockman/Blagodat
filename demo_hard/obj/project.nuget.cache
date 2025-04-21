@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "JQPhwQD6gMk=",
+  "dgSpecHash": "V6Z95Xb+ZCs=",
   "success": true,
   "projectFilePath": "C:\\Users\\IVAN\\RiderProjects\\demo_hard\\demo_hard\\demo_hard.csproj",
   "expectedPackageFiles": [
@@ -20,12 +20,16 @@
     "C:\\Users\\IVAN\\.nuget\\packages\\avalonia.themes.simple\\11.2.1\\avalonia.themes.simple.11.2.1.nupkg.sha512",
     "C:\\Users\\IVAN\\.nuget\\packages\\avalonia.win32\\11.2.1\\avalonia.win32.11.2.1.nupkg.sha512",
     "C:\\Users\\IVAN\\.nuget\\packages\\avalonia.x11\\11.2.1\\avalonia.x11.11.2.1.nupkg.sha512",
+    "C:\\Users\\IVAN\\.nuget\\packages\\bouncycastle.cryptography\\2.4.0\\bouncycastle.cryptography.2.4.0.nupkg.sha512",
+    "C:\\Users\\IVAN\\.nuget\\packages\\dialoghost.avalonia\\0.8.1\\dialoghost.avalonia.0.8.1.nupkg.sha512",
     "C:\\Users\\IVAN\\.nuget\\packages\\harfbuzzsharp\\7.3.0.2\\harfbuzzsharp.7.3.0.2.nupkg.sha512",
     "C:\\Users\\IVAN\\.nuget\\packages\\harfbuzzsharp.nativeassets.linux\\7.3.0.2\\harfbuzzsharp.nativeassets.linux.7.3.0.2.nupkg.sha512",
     "C:\\Users\\IVAN\\.nuget\\packages\\harfbuzzsharp.nativeassets.macos\\7.3.0.2\\harfbuzzsharp.nativeassets.macos.7.3.0.2.nupkg.sha512",
     "C:\\Users\\IVAN\\.nuget\\packages\\harfbuzzsharp.nativeassets.webassembly\\7.3.0.3-preview.2.2\\harfbuzzsharp.nativeassets.webassembly.7.3.0.3-preview.2.2.nupkg.sha512",
     "C:\\Users\\IVAN\\.nuget\\packages\\harfbuzzsharp.nativeassets.win32\\7.3.0.2\\harfbuzzsharp.nativeassets.win32.7.3.0.2.nupkg.sha512",
     "C:\\Users\\IVAN\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
+    "C:\\Users\\IVAN\\.nuget\\packages\\itextsharp\\5.5.13.4\\itextsharp.5.5.13.4.nupkg.sha512",
+    "C:\\Users\\IVAN\\.nuget\\packages\\messagebox.avalonia\\3.2.0\\messagebox.avalonia.3.2.0.nupkg.sha512",
     "C:\\Users\\IVAN\\.nuget\\packages\\microcom.runtime\\0.11.0\\microcom.runtime.0.11.0.nupkg.sha512",
     "C:\\Users\\IVAN\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\6.0.0\\microsoft.bcl.asyncinterfaces.6.0.0.nupkg.sha512",
     "C:\\Users\\IVAN\\.nuget\\packages\\microsoft.codeanalysis.analyzers\\3.3.3\\microsoft.codeanalysis.analyzers.3.3.3.nupkg.sha512",
@@ -78,5 +82,16 @@
     "C:\\Users\\IVAN\\.nuget\\packages\\xunit.extensibility.core\\2.9.3\\xunit.extensibility.core.2.9.3.nupkg.sha512",
     "C:\\Users\\IVAN\\.nuget\\packages\\xunit.extensibility.execution\\2.9.3\\xunit.extensibility.execution.2.9.3.nupkg.sha512"
   ],
-  "logs": []
+  "logs": [
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'iTextSharp 5.5.13.4' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net9.0'. This package may not be fully compatible with your project.",
+      "libraryId": "iTextSharp",
+      "targetGraphs": [
+        "net9.0"
+      ]
+    }
+  ]
 }

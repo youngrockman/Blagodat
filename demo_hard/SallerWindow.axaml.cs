@@ -1,155 +1,182 @@
 using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
 using demo_hard.Models;
+using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
+using Avalonia.Input;
+using System.ComponentModel;
 
 namespace demo_hard;
 
-public partial class SallerWindow : Window
+public partial class SallerWindow : Window, INotifyPropertyChanged
 {
-    private List<Service> SelectedServices = new();
+    private readonly User15Context _db = new();
+    public ObservableCollection<Client> Clients { get; } = new();
+    public ObservableCollection<Service> Services { get; } = new();
+    public ObservableCollection<Service> SelectedServices { get; } = new();
+
+    private Client? _selectedClient;
+    public Client? SelectedClient
+    {
+        get => _selectedClient;
+        set
+        {
+            _selectedClient = value;
+            OnPropertyChanged(nameof(SelectedClient));
+        }
+    }
+
+    private Service? _selectedService;
+    public Service? SelectedService
+    {
+        get => _selectedService;
+        set
+        {
+            _selectedService = value;
+            OnPropertyChanged(nameof(SelectedService));
+        }
+    }
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    protected virtual void OnPropertyChanged(string propertyName)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
 
     public SallerWindow()
     {
         InitializeComponent();
-        OrderNubmber();
-        LoadClients();
-        LoadService();
-        SearchItems();
+        DataContext = this;
+        LoadData();
+        OrderNumberBox.Text = "Будет сгенерирован автоматически";
     }
 
-    private void OrderNubmber()
+    private async void LoadData()
     {
-        using var context = new User2Context();
-        var OrderId = context.Orders.Max(o => o.Id) + 1;
-        if (context.Orders.Any(o => o.Id == OrderId)) throw new ArgumentException("Номера Id не должны совпадать");
-        if (OrderId < 1) throw new ArgumentException("OrderId must be greater than 1");
+        try
+        {
+            await _db.Clients.LoadAsync();
+            await _db.Services.LoadAsync();
+            
+            Clients.Clear();
+            Services.Clear();
+            
+            foreach (var client in _db.Clients.Local.ToList())
+                Clients.Add(client);
+                
+            foreach (var service in _db.Services.Local.ToList())
+                Services.Add(service);
+        }
+        catch (Exception ex)
+        {
+            StatusText.Text = $"Ошибка загрузки данных: {ex.Message}";
+        }
+    }
+
+    private async void AddClient_Click(object sender, RoutedEventArgs e)
+    {
+        var dialog = new AddClient();
+        var newClient = await dialog.ShowDialog<Client?>(this);
         
-    }
-
-    private void LoadClients()
-    {
-        using var context = new User2Context();
-        var client = context.Clients.ToList();
-        Clients_ComboBox.ItemsSource = client;
-    }
-
-    private void Clients_ComboBox_SelectionChanged(object? sender, SelectionChangedEventArgs e)
-    {
-        if (Clients_ComboBox.SelectedItem is Client selectedClient)
+        if (newClient != null)
         {
-            Console.WriteLine($"Вы выбрали: {selectedClient.Fio}");
-        }
-    }
-
-    private void Go_Back_Button(object? sender, RoutedEventArgs e)
-    {
-        new FunctionWindow().ShowDialog(this);
-    }
-
-    private void LoadService()
-    {
-        using var context = new User2Context();
-        var service = context.Services.ToList();
-        Service_Combobox.ItemsSource = service;
-    }
-
-    private void Service_Combobox_SelectionChanged(object? sender, SelectionChangedEventArgs e)
-    {
-        if (Service_Combobox.SelectedItem is Service selectedService)
-        {
-            Console.WriteLine($"Вы выбрали услугу: {selectedService.ServiceName}");
-        }
-    }
-
-    private void AddService_Button(object? sender, RoutedEventArgs e)
-    {
-        if (Service_Combobox.SelectedItem is Service selectedService && !SelectedServices.Contains(selectedService))
-        {
-            SelectedServices.Add(selectedService);
-            UpdateServiceList();
-        }
-    }
-
-    private void UpdateServiceList()
-    {
-        SelectedServicesListBox.ItemsSource = null;
-        SelectedServicesListBox.ItemsSource = SelectedServices.Select(s => s.ServiceName).ToList();
-    }
-
-    private void SearchItems()
-    {
-        using var context = new User2Context();
-        string searchText = SearchBox.Text?.ToLower() ?? "";
-        if (string.IsNullOrWhiteSpace(searchText))
-        {
-            SearchResultsListBox.ItemsSource = new List<string>();
-            return;
-        }
-
-        var clientRes = context.Clients
-            .Where(c => c.Fio.ToLower().Contains(searchText))
-            .Select(c => c.Fio);
-
-        var serviceRes = context.Services
-            .Where(s => s.ServiceName.ToLower().Contains(searchText))
-            .Select(s => s.ServiceName);
-
-        var results = clientRes.Concat(serviceRes).ToList();
-        SearchResultsListBox.ItemsSource = results;
-    }
-
-    private void SearchBox_Changed(object? sender, TextChangedEventArgs e)
-    {
-        SearchItems();
-    }
-
-    private void AddUser_Button(object? sender, RoutedEventArgs e)
-    {
-        new AddClient().ShowDialog(this);
-    }
-
-    private void Create_Order(object? sender, RoutedEventArgs e)
-    {
-        if (Clients_ComboBox.SelectedItem is not Client selectedClient ||
-            !SelectedServices.Any() ||
-            !int.TryParse(Duration.Text, out int duration))
-        {
-            Console.WriteLine("Ошибка: Не все данные выбраны корректно.");
-            return;
-        }
-
-        using var context = new User2Context();
-
-        var lastOrderId = context.Orders.Any() ? context.Orders.Max(o => o.Id) : 0;
-
-        foreach (var service in SelectedServices)
-        {
-            var newOrder = new demo_hard.Models.Order
+            try
             {
-                Id = lastOrderId + 1,
-                OrderCode = $"{selectedClient.ClientCode}/{DateTime.Now:dd/MM/yyyy}",
-                OrderDate = DateOnly.FromDateTime(DateTime.Now),
-                OrderTime = TimeOnly.FromDateTime(DateTime.Now),
-                ClientCode = selectedClient.ClientCode,
-                ServiceId = service.Id,
-                Status = "Новая",
-                DateClose = null,
-                RentalTime = duration
+                _db.Clients.Add(newClient);
+                await _db.SaveChangesAsync();
+                Clients.Add(newClient);
+                SelectedClient = newClient;
+            }
+            catch (Exception ex)
+            {
+                StatusText.Text = $"Ошибка добавления клиента: {ex.Message}";
+            }
+        }
+    }
+
+    private void AddService_Click(object sender, RoutedEventArgs e)
+    {
+        if (SelectedService != null)
+        {
+            if (!SelectedServices.Contains(SelectedService))
+            {
+                SelectedServices.Add(SelectedService);
+            }
+            else
+            {
+                StatusText.Text = "Эта услуга уже добавлена";
+            }
+        }
+        else
+        {
+            StatusText.Text = "Выберите услугу из списка";
+        }
+    }
+
+    private void RemoveService_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is Button button && button.CommandParameter is Service service)
+        {
+            SelectedServices.Remove(service);
+        }
+    }
+
+    private async void CreateOrder_Click(object sender, RoutedEventArgs e)
+    {
+        
+        if (SelectedClient == null)
+        {
+            StatusText.Text = "Выберите клиента";
+            return;
+        }
+
+      
+        if (!SelectedServices.Any())
+        {
+            StatusText.Text = "Добавьте хотя бы одну услугу";
+            return;
+        }
+
+        try
+        {
+            
+            var order = new Models.Order()
+            {
+                ClientId = SelectedClient.ClientId,
+                Time = TimeOnly.FromDateTime(DateTime.Now),
+                StartDate = DateOnly.FromDateTime(DateTime.Now),
+                Status = "active",
+                Services = SelectedServices.ToList(),
+                RentTime = 1
             };
 
-            context.Orders.Add(newOrder);
-            context.SaveChanges();
+          
+            _db.Orders.Add(order);
+            await _db.SaveChangesAsync();
 
-            lastOrderId++; 
+            
+            order.OrderCode = GenerateBarcode(order.OrderId, order.RentTime ?? 1);
+            await _db.SaveChangesAsync(); 
+
+            
+            new BarcodeWindow(order.OrderId, order.RentTime ?? 1).Show();
+            
+           
+            Close();
         }
+        catch (Exception ex)
+        {
+            StatusText.Text = $"Ошибка создания заказа: {ex.Message}";
+        }
+    }
 
-        
-        new Order(selectedClient, SelectedServices, duration).ShowDialog(this);
+    private string GenerateBarcode(int orderId, int rentTime)
+    {
+        var rnd = new Random();
+        return $"{orderId}{DateTime.Now:ddMMyyHHmm}{rentTime}{rnd.Next(100000, 999999)}";
     }
 }
-

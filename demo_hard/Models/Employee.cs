@@ -5,15 +5,19 @@ namespace demo_hard.Models;
 
 public partial class Employee
 {
-    public int EmployeId { get; set; }
+    public int Id { get; set; }
 
-    public int RoleId { get; set; }
+    public int Role { get; set; }
 
-    public string Fio { get; set; } = null!;
+    public string? Login { get; set; }
 
-    public string EmployeLogin { get; set; } = null!;
+    public string? Fio { get; set; }
 
-    public string EmployePassword { get; set; } = null!;
+    public string? Password { get; set; }
 
-    public string? EmployePhoto { get; set; }
+    public DateTime? LastEnter { get; set; }
+
+    public string? EnterStatus { get; set; }
+
+    public string? Photo { get; set; }
 }

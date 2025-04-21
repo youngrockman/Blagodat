@@ -1,96 +1,123 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
 using Avalonia.Controls;
+using Avalonia.Data.Converters;
+using Avalonia.Media;
 using Avalonia.Interactivity;
 using demo_hard.Models;
-using Tmds.DBus.Protocol;
 
 namespace demo_hard;
 
 public partial class HistoryWindow : Window
 {
-    private ObservableCollection<LastEnter> lastEnter = new();
-    public List<LastEnter> Enter = new();
-    public bool sort = true;
+    private ObservableCollection<Employee> employees = new();
+    public List<Employee> AllEmployees = new();
+    
+    public int SuccessfulLoginsCount => employees.Count(e => IsSuccessStatus(e.EnterStatus));
+    public int FailedLoginsCount => employees.Count(e => IsFailStatus(e.EnterStatus));
+
     public HistoryWindow()
     {
-        using var context = new User2Context();
         InitializeComponent();
+        LoadData();
+        DataContext = this;
         
+        
+        LoginComboBox.SelectionChanged += ComboBox_SelectionChanged;
+        SortComboBox.SelectionChanged += ComboBox_SelectionChanged;
+        StatusComboBox.SelectionChanged += ComboBox_SelectionChanged;
+        ResetButton.Click += ResetButton_Click;
+    }
 
-        Enter = context.LastEnters.Select(it => new LastEnter
-        {
-            EmployeId = it.EmployeId,
-            Login = it.Login,
-            EnterDatetime = it.EnterDatetime,
-            EnterType = it.EnterType,
-        }).ToList();
+    private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        ApplyFilters();
+    }
+
+    private bool IsSuccessStatus(string? status)
+    {
+        return status != null && status.Contains("Успешно");
+    }
+
+    private bool IsFailStatus(string? status)
+    {
+        return status != null && status.Contains("Неуспешн");
+    }
+
+    private void LoadData()
+    {
+        using var context = new User15Context();
+        AllEmployees = context.Employees
+            .OrderByDescending(e => e.LastEnter)
+            .Select(e => new Employee
+            {
+                Id = e.Id,
+                Login = e.Login,
+                LastEnter = e.LastEnter,
+                EnterStatus = e.EnterStatus ?? "Неизвестно"
+            }).ToList();
+
+        employees = new ObservableCollection<Employee>(AllEmployees);
+        LastEnterBox.ItemsSource = employees;
         
-        foreach (var e in Enter)
+        LoginComboBox.ItemsSource = new List<string> { "Все пользователи" }
+            .Concat(AllEmployees.Select(e => e.Login).Distinct().OrderBy(l => l));
+        LoginComboBox.SelectedIndex = 0;
+    }
+
+    private void ApplyFilters()
+    {
+        var filtered = AllEmployees.AsEnumerable();
+        
+        if (LoginComboBox.SelectedItem is string selectedLogin && selectedLogin != "Все пользователи")
         {
-            lastEnter.Add(e);
+            filtered = filtered.Where(e => e.Login == selectedLogin);
         }
         
-        LastEnterBox.ItemsSource = lastEnter;
-        LoginComboBox.ItemsSource = Enter.Select(it=>it.Login);
-        SortComboBox.ItemsSource = new List<string> { "По возростанию", "по убыванию"};
-        SortLogin();
+        if (StatusComboBox.SelectedIndex == 1)
+        {
+            filtered = filtered.Where(e => IsSuccessStatus(e.EnterStatus));
+        }
+        else if (StatusComboBox.SelectedIndex == 2)
+        {
+            filtered = filtered.Where(e => IsFailStatus(e.EnterStatus));
+        }
+        
+        filtered = SortComboBox.SelectedIndex == 0 
+            ? filtered.OrderByDescending(e => e.LastEnter) 
+            : filtered.OrderBy(e => e.LastEnter);
+
+        employees.Clear();
+        foreach (var emp in filtered)
+        {
+            employees.Add(emp);
+        }
     }
+
+    private void ResetButton_Click(object? sender, RoutedEventArgs e)
+    {
+        LoginComboBox.SelectedIndex = 0;
+        SortComboBox.SelectedIndex = 0;
+        StatusComboBox.SelectedIndex = 0;
+        ApplyFilters();
+    }
+}
+
+public class StatusToColorConverter : IValueConverter
+{
+    public static StatusToColorConverter Instance { get; } = new StatusToColorConverter();
     
-
-
-    private void SortLogin()
+    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        var temp = Enter;
-        if (LoginComboBox.SelectedItem is string login)
-        {
-            temp = temp.Where(it => it.Login == login).ToList();
-        }
-
-        temp = sort? temp.OrderBy(it => it.Login).ToList(): temp.OrderByDescending(it=>it. Login).ToList();
-
-        lastEnter.Clear();
-
-        foreach (var items in temp)
-        {
-            lastEnter.Add(items);
-        }
+        if (value is not string status) return Brushes.Black;
+        return status.Contains("Успешно") ? Brushes.Green : Brushes.Red;
     }
 
-    private void LoginCombobox_OnSelectedChanged(object? sender, SelectionChangedEventArgs e)
+    public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        sort = false;
-        SortLogin();
-    }
-    
-    private void SortButton_OnClick(object? sender, RoutedEventArgs e)
-    {
-        sort = !sort; 
-        SortLogin();
-    }
-
-    private void SortDateTime()
-    {
-        var temp = Enter;
-        if (SortComboBox.SelectedItem is string sortOption)
-        {
-            temp = sortOption == "По возрастанию" ? temp.OrderBy(it=>it.EnterDatetime).ToList() : temp.OrderByDescending(it=>it.EnterDatetime).ToList();
-        }
-        
-        lastEnter.Clear();
-        foreach (var datetime in temp)
-        {
-            lastEnter.Add(datetime);
-        }
-        
-        
-        
-    }
-
-    private void SortComboBox_OnSelectedChanged(object? sender, SelectionChangedEventArgs e)
-    {
-        SortDateTime();
+        throw new NotImplementedException();
     }
 }

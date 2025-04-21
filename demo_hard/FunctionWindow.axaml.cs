@@ -8,6 +8,7 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Media.Imaging;
 using demo_hard.Models;
 
+
 namespace demo_hard;
 
 public partial class FunctionWindow : Window
@@ -24,12 +25,12 @@ public partial class FunctionWindow : Window
         
         DataContext = new ImageEmployee()
         {
-            EmployeId = user.EmployeId,
+            Id = user.Id,
             Fio = user.Fio,
-            EmployeLogin = user.EmployeLogin,
-            EmployePassword = user.EmployePassword,
-            RoleId = user.RoleId,
-            EmployePhoto = user.EmployePhoto
+            Login = user.Login,
+            Password = user.Password,
+            Role = user.Role,
+            Photo = user.Photo
         };
         
         
@@ -88,14 +89,14 @@ public partial class FunctionWindow : Window
     
     public class ImageEmployee: Employee
     {
-        public bool IsRole2 => RoleId == 2;
+        public bool IsRole2 => Role == 2;
         Bitmap? Image
         {
             get
             {
                 try
                 {
-                    string absolutePath = Path.Combine(AppContext.BaseDirectory, EmployePhoto);
+                    string absolutePath = Path.Combine(AppContext.BaseDirectory, Photo);
                     return new Bitmap(absolutePath);
                 }
                 catch(Exception e)

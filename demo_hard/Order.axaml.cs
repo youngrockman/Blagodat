@@ -1,44 +1,45 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using demo_hard.Models;
-using Tmds.DBus.Protocol;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace demo_hard;
 
-public partial class Order: Window
+public partial class Order : Window
 {
-
-    public Order()
+    private readonly Models.Order _order;
+    private readonly User15Context _db = new();
+    
+    public Order(Models.Order order)
     {
         InitializeComponent();
+        _order = order;
+        LoadOrderData();
     }
-    public Order(Client selectedClient, List<Service> selectedServices, int duration)
-    {
-        InitializeComponent();
 
-        OrderNumberText.Text = GenerateOrderNumber(selectedClient);
-        ClientCodeText.Text = selectedClient.ClientCode.ToString();
-        ClientFioText.Text = selectedClient.Fio;
-        ClientAddressText.Text = selectedClient.Address;
-        DateTimeBox.Text = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
-        ServicesListBox.ItemsSource = selectedServices.Select(s => s.ServiceName).ToList();
+    private void LoadOrderData()
+    {
         
-        decimal totalPrice = selectedServices.Sum(s => decimal.TryParse(s.ServiceCost, out var cost) ? cost : 0);
-        TotalCostText.Text = $"${totalPrice:0.00}";
+        var client = _db.Clients.FirstOrDefault(c => c.ClientId == _order.ClientId);
+        
+        OrderNumber.Text = _order.OrderId.ToString();
+        ClientName.Text = client?.Fio ?? "Не указан";  
+        OrderDate.Text = $"{_order.StartDate} {_order.Time}";
+        TotalCost.Text = _order.Services.Sum(s => s.CostPerHour ?? 0).ToString("C");
+        StatusText.Text = _order.Status ?? "active";
     }
 
-    private string GenerateOrderNumber(Client client)
+    private void PrintBarcode_Click(object sender, RoutedEventArgs e)
     {
-        using var context = new User2Context();
-        int lastOrderId = context.Orders.Any() ? context.Orders.Max(o => o.Id) : 0;
-        return $"{client.ClientCode}/{DateTime.Now:ddMMyyyy}/{lastOrderId + 1}";
-    }
-
-    private void CloseButton_Click(object? sender, RoutedEventArgs e)
-    {
+        if (_order.RentTime == null)
+        {
+            _order.RentTime = 1; 
+        }
+        
+        new BarcodeWindow(_order.OrderId, _order.RentTime.Value).Show();
         Close();
     }
+    
+    private void Close_Click(object sender, RoutedEventArgs e) => Close();
 }
