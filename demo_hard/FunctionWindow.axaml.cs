@@ -8,17 +8,15 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Media.Imaging;
 using demo_hard.Model;
 
-
 namespace demo_hard;
 
 public partial class FunctionWindow : Window
 {
     private readonly TimeSpan sessionDuration = TimeSpan.FromMinutes(10);
     private readonly TimeSpan warningTime = TimeSpan.FromMinutes(5);
-    //private readonly TimeSpan lockoutDuration = TimeSpan.FromMinutes(1);
-    
     private DateTime sessionStartTime;
     private bool warningShow = false;
+
     public FunctionWindow(Employee user)
     {
         InitializeComponent();
@@ -30,13 +28,13 @@ public partial class FunctionWindow : Window
             Login = user.Login,
             Password = user.Password,
             Role = user.Role,
-            Photo = user.Photo
+            Photo = user.Photo,
+            ShowHistoryButton = user.Role == 3, 
+            ShowCreateOrderButton = user.Role != 3 
         };
-        
         
         sessionStartTime = DateTime.Now;
         StartSessionTimer();
-        
     }
     
     public FunctionWindow()
@@ -69,7 +67,7 @@ public partial class FunctionWindow : Window
         }
     }
 
-    private async void EndSession()
+    private void EndSession()
     {
         this.Close();
     }
@@ -83,13 +81,17 @@ public partial class FunctionWindow : Window
     {
         new SallerWindow().ShowDialog(this);    
     }
-    
-    
-    
-    
-    public class ImageEmployee: Employee
+
+    private void History_Button(object? sender, RoutedEventArgs e)
     {
-        public bool IsRole2 => Role == 2;
+        new HistoryWindow().ShowDialog(this);
+    }
+
+    public class ImageEmployee : Employee
+    {
+        public bool ShowHistoryButton { get; set; }
+        public bool ShowCreateOrderButton { get; set; }
+
         Bitmap? Image
         {
             get
@@ -106,10 +108,5 @@ public partial class FunctionWindow : Window
                 }
             }
         }
-    }
-
-    private void History_Button(object? sender, RoutedEventArgs e)
-    {
-        new HistoryWindow().ShowDialog(this);
     }
 }

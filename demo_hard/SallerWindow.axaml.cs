@@ -203,7 +203,7 @@ public partial class SallerWindow : Window, INotifyPropertyChanged, IReactiveObj
             await _databaseContext.SaveChangesAsync();
             GenerateOrderPdfDocument(newOrder);
             
-            // Получаем максимальное время аренды из выбранных услуг
+           
             int maxRentTime = SelectedServices.Max(s => s.RentTime);
             new BarcodeWindow(newOrder.OrderId, maxRentTime).Show();
             
