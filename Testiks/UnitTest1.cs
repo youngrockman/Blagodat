@@ -1,85 +1,167 @@
-using NUnit.Framework;
-using System;
 using Libary;
 
-namespace Testiks
+[TestFixture]
+public class AdditionalTests
 {
-    public class Tests
+    private Calculations calculations;
+
+    [SetUp]
+    public void Setup()
     {
-        [SetUp]
-        public void Setup()
+        calculations = new Calculations();
+    }
+
+    [Test]
+    public void TestPeriodEndsExactlyAtWorkEnd()
+    {
+        var result = calculations.AvailablePeriods(
+            new TimeSpan[] { new TimeSpan(16, 0, 0) },
+            new int[] { 60 },
+            new TimeSpan(9, 0, 0),
+            new TimeSpan(17, 0, 0),
+            30);
+
+        Assert.AreEqual("09:00-09:30", result[0]);
+        Assert.AreEqual("15:30-16:00", result[result.Length - 1]);
+    }
+
+    [Test]
+    public void TestPeriodStartsExactlyAtWorkBegin()
+    {
+        var result = calculations.AvailablePeriods(
+            new TimeSpan[] { new TimeSpan(9, 0, 0) },
+            new int[] { 60 },
+            new TimeSpan(9, 0, 0),
+            new TimeSpan(17, 0, 0),
+            30);
+
+        Assert.AreEqual("10:00-10:30", result[0]);
+        Assert.AreEqual("16:30-17:00", result[result.Length - 1]);
+    }
+
+    [Test]
+    public void TestNotEnoughTimeForConsultation()
+    {
+        var result = calculations.AvailablePeriods(
+            new TimeSpan[] { new TimeSpan(10, 0, 0), new TimeSpan(10, 45, 0) },
+            new int[] { 30, 15 },
+            new TimeSpan(9, 0, 0),
+            new TimeSpan(11, 0, 0),
+            30);
+
+        // Only 09:00-09:30 and 09:30-10:00 should be available
+        Assert.AreEqual(2, result.Length);
+        Assert.AreEqual("09:00-09:30", result[0]);
+        Assert.AreEqual("09:30-10:00", result[1]);
+    }
+
+    [Test]
+    public void TestConsultationLongerThanFreeSlot()
+    {
+        var result = calculations.AvailablePeriods(
+            new TimeSpan[] { new TimeSpan(10, 0, 0), new TimeSpan(11, 0, 0) },
+            new int[] { 30, 30 },
+            new TimeSpan(9, 0, 0),
+            new TimeSpan(12, 0, 0),
+            45);
+
+        // Only 09:00-09:45 and 09:45-10:30 fit
+        Assert.AreEqual(1, result.Length);
+        Assert.AreEqual("09:00-09:45", result[0]);
+    }
+
+    [Test]
+    public void TestBusyPeriodsOverlap()
+    {
+        var result = calculations.AvailablePeriods(
+            new TimeSpan[] { new TimeSpan(10, 0, 0), new TimeSpan(10, 30, 0) },
+            new int[] { 60, 60 },
+            new TimeSpan(9, 0, 0),
+            new TimeSpan(12, 0, 0),
+            30);
+
+        Assert.AreEqual(new[]
         {
-        }
+            "09:00-09:30",
+            "09:30-10:00",
+            "11:30-12:00"
+        }, result);
+    }
 
-        [Test]
-        public void TestNoBusyPeriods()
+    [Test]
+    public void TestBusyEndsAtWorkEnd()
+    {
+        var result = calculations.AvailablePeriods(
+            new TimeSpan[] { new TimeSpan(16, 30, 0) },
+            new int[] { 30 },
+            new TimeSpan(9, 0, 0),
+            new TimeSpan(17, 0, 0),
+            30);
+
+        Assert.IsFalse(Array.Exists(result, r => r.StartsWith("16:30")));
+    }
+
+    [Test]
+    public void TestMultipleGapsBetweenBusy()
+    {
+        var result = calculations.AvailablePeriods(
+            new TimeSpan[]
+            {
+                new TimeSpan(10, 0, 0),
+                new TimeSpan(12, 0, 0),
+                new TimeSpan(14, 0, 0)
+            },
+            new int[] { 30, 30, 30 },
+            new TimeSpan(9, 0, 0),
+            new TimeSpan(15, 0, 0),
+            30);
+
+        Assert.AreEqual(new[]
         {
-            Calculations calculations = new Calculations();
-            TimeSpan[] startTimes = Array.Empty<TimeSpan>();
-            int[] durations = Array.Empty<int>();
-            TimeSpan beginWorkingTime = new TimeSpan(9, 0, 0);
-            TimeSpan endWorkingTime = new TimeSpan(17, 0, 0);
-            int consultationTime = 30;
+            "09:00-09:30", "09:30-10:00",
+            "10:30-11:00", "11:00-11:30", "11:30-12:00",
+            "12:30-13:00", "13:00-13:30", "13:30-14:00",
+            "14:30-15:00"
+        }, result);
+    }
 
+    [Test]
+    public void TestExactSlotAtEndOfDay()
+    {
+        var result = calculations.AvailablePeriods(
+            Array.Empty<TimeSpan>(),
+            Array.Empty<int>(),
+            new TimeSpan(16, 30, 0),
+            new TimeSpan(17, 0, 0),
+            30);
 
-            string[] result = calculations.AvailablePeriods(startTimes, durations, beginWorkingTime, endWorkingTime,
-                consultationTime);
+        Assert.AreEqual(1, result.Length);
+        Assert.AreEqual("16:30-17:00", result[0]);
+    }
 
+    [Test]
+    public void TestBusyCoversWholeDay()
+    {
+        var result = calculations.AvailablePeriods(
+            new TimeSpan[] { new TimeSpan(9, 0, 0) },
+            new int[] { 480 },
+            new TimeSpan(9, 0, 0),
+            new TimeSpan(17, 0, 0),
+            30);
 
-            Assert.AreEqual(16, result.Length);
-            Assert.AreEqual("09:00-09:30", result[0]);
-            Assert.AreEqual("16:30-17:00", result[15]);
-        }
+        Assert.AreEqual(0, result.Length);
+    }
 
-        [Test]
-        public void TestSingleBusyPeriod()
-        {
+    [Test]
+    public void TestFreeSlotBeforeFirstBusy()
+    {
+        var result = calculations.AvailablePeriods(
+            new TimeSpan[] { new TimeSpan(9, 30, 0) },
+            new int[] { 60 },
+            new TimeSpan(9, 0, 0),
+            new TimeSpan(11, 0, 0),
+            30);
 
-            Calculations calculations = new Calculations();
-            TimeSpan[] startTimes = new TimeSpan[] { new TimeSpan(10, 0, 0) };
-            int[] durations = new int[] { 60 };
-            TimeSpan beginWorkingTime = new TimeSpan(9, 0, 0);
-            TimeSpan endWorkingTime = new TimeSpan(17, 0, 0);
-            int consultationTime = 30;
-
-
-            string[] result = calculations.AvailablePeriods(startTimes, durations, beginWorkingTime, endWorkingTime,
-                consultationTime);
-
-
-            Assert.AreEqual(14, result.Length);
-            Assert.AreEqual("09:00-09:30", result[0]);
-            Assert.AreEqual("09:30-10:00", result[1]);
-            Assert.AreEqual("11:00-11:30", result[2]);
-            Assert.AreEqual("16:30-17:00", result[13]);
-        }
-
-        [Test]
-        public void TestMultipleBusyPeriods()
-        {
-            // Arrange
-            Calculations calculations = new Calculations();
-            TimeSpan[] startTimes = new TimeSpan[]
-                { new TimeSpan(10, 0, 0), new TimeSpan(12, 0, 0), new TimeSpan(14, 0, 0) };
-            int[] durations = new int[] { 60, 30, 90 };
-            TimeSpan beginWorkingTime = new TimeSpan(9, 0, 0);
-            TimeSpan endWorkingTime = new TimeSpan(17, 0, 0);
-            int consultationTime = 30;
-
-            // Act
-            string[] result = calculations.AvailablePeriods(startTimes, durations, beginWorkingTime, endWorkingTime,
-                consultationTime);
-
-            // Assert
-            Assert.AreEqual(10, result.Length);
-            Assert.AreEqual("09:00-09:30", result[0]);
-            Assert.AreEqual("09:30-10:00", result[1]);
-            Assert.AreEqual("11:00-11:30", result[2]);
-            Assert.AreEqual("11:30-12:00", result[3]);
-            Assert.AreEqual("12:30-13:00", result[4]);
-            Assert.AreEqual("15:30-16:00", result[5]);
-            Assert.AreEqual("16:00-16:30", result[6]);
-            Assert.AreEqual("16:30-17:00", result[7]);
-        }
+        Assert.AreEqual(new[] { "09:00-09:30", "10:30-11:00" }, result);
     }
 }
