@@ -6,7 +6,7 @@
         <TextBlock Text="ШТРИХ-КОД ЗАКАЗА" FontSize="16" FontWeight="Bold"/>
         
         <Border BorderBrush="Black" BorderThickness="1" Padding="15" CornerRadius="5">
-            <Canvas x:Name="BarcodeCanvas" Width="300" Height="100"/>
+            <Canvas x:Name="BarcodeCanvas" Width="100" Height="100"/>
         </Border>
         
         <TextBlock x:Name="BarcodeText" FontFamily="Courier New" FontSize="14" TextAlignment="Center"/>

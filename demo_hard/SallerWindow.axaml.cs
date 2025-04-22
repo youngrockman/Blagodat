@@ -216,81 +216,115 @@ public partial class SallerWindow : Window, INotifyPropertyChanged, IReactiveObj
     }
 
     private void GenerateOrderPdfDocument(Model.Order order)
+{
+    
+    string documentsDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);  
+    string pdfFilePath = Path.Combine(documentsDirectory, $"Order_{order.OrderCode.Replace("/", "_")}.pdf");
+
+    using (Document document = new Document(PageSize.A4, 40, 40, 40, 40))
     {
-        string documentsDirectoryPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-        string pdfFilePath = Path.Combine(documentsDirectoryPath, $"Заказ_{order.OrderCode.Replace("/", "_")}.pdf");
+        PdfWriter.GetInstance(document, new FileStream(pdfFilePath, FileMode.Create));
+        document.Open();
 
-        using (Document document = new Document(PageSize.A4, 40, 40, 40, 40))
+      
+        BaseFont bf = BaseFont.CreateFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.EMBEDDED);
+        Font titleFont  = new Font(bf, 16, Font.BOLD);
+        Font headerFont = new Font(bf, 12, Font.BOLD);
+        Font normalFont = new Font(bf, 12);
+
+        
+        var title = new Paragraph("Payment Receipt", titleFont)
         {
-            PdfWriter pdfWriter = PdfWriter.GetInstance(document, new FileStream(pdfFilePath, FileMode.Create));
-            document.Open();
+            Alignment    = Element.ALIGN_CENTER,
+            SpacingAfter = 20f
+        };
+        document.Add(title);
 
-            Font titleFont = FontFactory.GetFont("Arial", 16, Font.BOLD);
-            Font headerFont = FontFactory.GetFont("Arial", 12, Font.BOLD);
-            Font normalFont = FontFactory.GetFont("Arial", 12);
+       
+        PdfPTable infoTable = new PdfPTable(2) { WidthPercentage = 100 };
+        infoTable.SetWidths(new float[] { 30f, 70f });
+        AddCell(infoTable, "Order Number:", order.OrderCode, headerFont, normalFont);
+        AddCell(infoTable, "Date & Time:", $"{order.StartDate:dd.MM.yyyy} {order.Time:hh\\:mm}", headerFont, normalFont);
+        AddCell(infoTable, "Customer:", SelectedClient?.Fio ?? "N/A", headerFont, normalFont);
+        AddCell(infoTable, "Status:", order.Status, headerFont, normalFont);
+        document.Add(infoTable);
 
-            Paragraph titleParagraph = new Paragraph("Квитанция об оплате", titleFont);
-            titleParagraph.Alignment = Element.ALIGN_CENTER;
-            titleParagraph.SpacingAfter = 20;
-            document.Add(titleParagraph);
+        document.Add(new Paragraph(" "));
 
-            PdfPTable orderInfoTable = new PdfPTable(2);
-            orderInfoTable.WidthPercentage = 100;
-            orderInfoTable.SetWidths(new float[] { 30, 70 });
-
-            AddPdfTableRow(orderInfoTable, "Номер заказа:", order.OrderCode, headerFont, normalFont);
-            AddPdfTableRow(orderInfoTable, "Дата и время:", $"{order.StartDate:dd.MM.yyyy} {order.Time:hh\\:mm}", headerFont, normalFont);
-            AddPdfTableRow(orderInfoTable, "Клиент:", SelectedClient?.Fio ?? "Не указан", headerFont, normalFont);
-            AddPdfTableRow(orderInfoTable, "Статус:", order.Status, headerFont, normalFont);
-
-            document.Add(orderInfoTable);
-            document.Add(new Paragraph(" "));
-
-            Paragraph servicesTitleParagraph = new Paragraph("Оказанные услуги:", headerFont);
-            servicesTitleParagraph.SpacingAfter = 10;
-            document.Add(servicesTitleParagraph);
-
-            PdfPTable servicesTable = new PdfPTable(3);
-            servicesTable.WidthPercentage = 100;
-            servicesTable.SetWidths(new float[] { 60, 20, 20 });
-
-            servicesTable.AddCell(new Phrase("Наименование услуги", headerFont));
-            servicesTable.AddCell(new Phrase("Стоимость/час", headerFont));
-            servicesTable.AddCell(new Phrase("Время (мин)", headerFont));
-
-            foreach (ServiceWithRentTime service in SelectedServices)
-            {
-                servicesTable.AddCell(new Phrase(service.ServiceName, normalFont));
-                servicesTable.AddCell(new Phrase($"{service.CostPerHour:N2} ₽", normalFont));
-                servicesTable.AddCell(new Phrase(service.RentTime.ToString(), normalFont));
-            }
-
-            document.Add(servicesTable);
-            document.Add(new Paragraph(" "));
-
-            decimal totalAmount = SelectedServices.Sum(service => (service.CostPerHour ?? 0) * (service.RentTime / 60m));
-            Paragraph totalParagraph = new Paragraph($"Итого к оплате: {totalAmount:N2} ₽", headerFont);
-            totalParagraph.Alignment = Element.ALIGN_RIGHT;
-            document.Add(totalParagraph);
-        }
-
-        try
+        
+        var svcTitle = new Paragraph("Services Rendered:", headerFont)
         {
-            Process.Start(new ProcessStartInfo
+            SpacingAfter = 10f
+        };
+        document.Add(svcTitle);
+
+        PdfPTable svcTable = new PdfPTable(3)
+        {
+            WidthPercentage = 100,
+            SpacingBefore   = 5f,
+            SpacingAfter    = 5f
+        };
+        svcTable.SetWidths(new float[] { 60f, 20f, 20f });
+
+       
+        foreach (var hdr in new[] { "Service Name", "Rate/hour", "Duration (min)" })
+        {
+            svcTable.AddCell(new PdfPCell(new Phrase(hdr, headerFont))
             {
-                FileName = pdfFilePath,
-                UseShellExecute = true
+                HorizontalAlignment = Element.ALIGN_CENTER,
+                BackgroundColor     = BaseColor.LIGHT_GRAY,
+                Padding             = 5f
             });
         }
-        catch (Exception exception)
+
+      
+        foreach (var svc in SelectedServices)
         {
-            StatusText.Text = $"Ошибка при открытии PDF: {exception.Message}";
+            svcTable.AddCell(new PdfPCell(new Phrase(svc.ServiceName, normalFont)) { Padding = 5f });
+            svcTable.AddCell(new PdfPCell(new Phrase($"{svc.CostPerHour:N2} ₽", normalFont))
+            {
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+                Padding             = 5f
+            });
+            svcTable.AddCell(new PdfPCell(new Phrase(svc.RentTime.ToString(), normalFont))
+            {
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+                Padding             = 5f
+            });
         }
+
+        document.Add(svcTable);
+
+      
+        decimal total = SelectedServices.Sum(s => (s.CostPerHour ?? 0) * (s.RentTime / 60m));
+        var totalPara = new Paragraph($"Total Due: {total:N2} ₽", headerFont)
+        {
+            Alignment       = Element.ALIGN_RIGHT,
+            SpacingBefore   = 10f
+        };
+        document.Add(totalPara);
     }
 
-    private void AddPdfTableRow(PdfPTable table, string label, string value, Font labelFont, Font valueFont)
+   
+    try
     {
-        table.AddCell(new Phrase(label, labelFont));
-        table.AddCell(new Phrase(value, valueFont));
+        Process.Start(new ProcessStartInfo
+        {
+            FileName        = pdfFilePath,
+            UseShellExecute = true  
+        });
     }
+    catch (Exception ex)
+    {
+        StatusText.Text = $"Error opening PDF: {ex.Message}";
+    }
+}
+
+
+private void AddCell(PdfPTable table, string label, string value, Font labelFont, Font valueFont)
+{
+    table.AddCell(new Phrase(label, labelFont));
+    table.AddCell(new Phrase(value, valueFont));
+}
+
 }

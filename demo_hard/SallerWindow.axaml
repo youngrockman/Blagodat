@@ -7,7 +7,7 @@
         Height="600">
     
     <StackPanel Margin="20">
-        <!-- Номер заказа -->
+        
         <StackPanel Margin="0,0,0,15">
             <TextBlock Text="Номер заказа:" FontWeight="Bold" FontSize="14"/>
             <TextBox x:Name="OrderNumberBox" 
@@ -17,7 +17,7 @@
                      Padding="5"/>
         </StackPanel>
 
-        <!-- Клиент -->
+       
         <StackPanel Margin="0,0,0,15">
             <TextBlock Text="Клиент:" FontWeight="Bold" FontSize="14"/>
             <DockPanel LastChildFill="True">
@@ -34,7 +34,7 @@
             </DockPanel>
         </StackPanel>
 
-        <!-- Услуги -->
+        
         <StackPanel Margin="0,0,0,15">
             <TextBlock Text="Услуги:" FontWeight="Bold" FontSize="14"/>
             <DockPanel LastChildFill="True" Margin="0,0,0,10">
@@ -50,7 +50,7 @@
                           Padding="5"/>
             </DockPanel>
             
-            <!-- Время аренды -->
+           
             <StackPanel Margin="0,0,0,10" Orientation="Horizontal" VerticalAlignment="Center">
                 <TextBlock Text="Время аренды (минуты):" 
                           Margin="0,0,10,0"
@@ -61,7 +61,7 @@
                          Padding="5"/>
             </StackPanel>
             
-            <!-- Список выбранных услуг -->
+           
             <TextBlock Text="Выбранные услуги:" 
                       Margin="0,0,0,5"
                       FontWeight="Bold"
@@ -95,7 +95,7 @@
             </ListBox>
         </StackPanel>
 
-        <!-- Кнопка оформления -->
+      
         <Button Content="Оформить заказ" 
                 HorizontalAlignment="Stretch"
                 Margin="0,20,0,0"
@@ -106,7 +106,7 @@
                 FontSize="14"
                 FontWeight="Bold"/>
 
-        <!-- Статус -->
+       
         <TextBlock x:Name="StatusText" 
                    Foreground="Red"
                    TextWrapping="Wrap"
