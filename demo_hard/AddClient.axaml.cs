@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using demo_hard.Models;
+using demo_hard.Model;
 
 namespace demo_hard;
 

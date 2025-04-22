@@ -7,7 +7,7 @@ using Avalonia.Controls;
 using Avalonia.Data.Converters;
 using Avalonia.Media;
 using Avalonia.Interactivity;
-using demo_hard.Models;
+using demo_hard.Model;
 
 namespace demo_hard;
 

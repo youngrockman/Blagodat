@@ -6,7 +6,7 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media.Imaging;
-using demo_hard.Models;
+using demo_hard.Model;
 
 
 namespace demo_hard;

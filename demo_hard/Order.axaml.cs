@@ -1,6 +1,7 @@
+using System.Collections.Generic;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using demo_hard.Models;
+using demo_hard.Model;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,10 +9,10 @@ namespace demo_hard;
 
 public partial class Order : Window
 {
-    private readonly Models.Order _order;
+    private readonly Model.Order _order;
     private readonly User15Context _db = new();
     
-    public Order(Models.Order order)
+    public Order(Model.Order order)
     {
         InitializeComponent();
         _order = order;
@@ -21,42 +22,32 @@ public partial class Order : Window
     private void LoadOrderData()
     {
         var client = _db.Clients.FirstOrDefault(c => c.ClientId == _order.ClientId);
+        var orderServices = _db.OrderServices
+            .Include(os => os.Service)
+            .Where(os => os.OrderId == _order.OrderId)
+            .ToList();
         
         OrderNumber.Text = _order.OrderId.ToString();
         ClientName.Text = client?.Fio ?? "Не указан";
         OrderDate.Text = $"{_order.StartDate} {_order.Time}";
         
-        // Парсим информацию об услугах из OrderCode
-        var servicesInfo = ParseServicesInfo(_order);
+        var servicesInfo = CalculateServicesInfo(orderServices);
         TotalCost.Text = servicesInfo.totalCost.ToString("C");
         StatusText.Text = _order.Status ?? "Новая";
     }
 
-    private (decimal totalCost, string servicesText) ParseServicesInfo(Models.Order order)
+    private (decimal totalCost, string servicesText) CalculateServicesInfo(List<OrderService> orderServices)
     {
         decimal total = 0;
         string info = "";
         
-        if (!string.IsNullOrEmpty(order.OrderCode))
+        foreach (var os in orderServices)
         {
-            var parts = order.OrderCode.Split(';');
-            foreach (var part in parts)
+            if (os.Service != null)
             {
-                if (string.IsNullOrEmpty(part)) continue;
-                
-                var serviceParts = part.Split(':');
-                if (serviceParts.Length == 2 && 
-                    int.TryParse(serviceParts[0], out var serviceId) &&
-                    int.TryParse(serviceParts[1], out var rentTime))
-                {
-                    var service = _db.Services.Find(serviceId);
-                    if (service != null)
-                    {
-                        var cost = (service.CostPerHour ?? 0) * rentTime;
-                        total += cost;
-                        info += $"{service.ServiceName} - {rentTime} ч ({cost:C})\n";
-                    }
-                }
+                decimal cost = (os.Service.CostPerHour ?? 0) * (os.RentTime / 60m);
+                total += cost;
+                info += $"{os.Service.ServiceName} - {os.RentTime} мин ({cost:C})\n";
             }
         }
         
@@ -65,7 +56,11 @@ public partial class Order : Window
 
     private void PrintBarcode_Click(object sender, RoutedEventArgs e)
     {
-        new BarcodeWindow(_order.OrderId, _order.RentTime ?? 1).Show();
+        int rentTime = _db.OrderServices
+            .Where(os => os.OrderId == _order.OrderId)
+            .Max(os => os.RentTime);
+            
+        new BarcodeWindow(_order.OrderId, rentTime).Show();
         Close();
     }
     

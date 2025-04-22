@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace demo_hard.Models;
+namespace demo_hard.Model;
 
 public partial class Role
 {

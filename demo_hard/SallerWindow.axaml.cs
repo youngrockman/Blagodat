@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using demo_hard.Models;
+using demo_hard.Model;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using System.IO;
@@ -178,13 +178,12 @@ public partial class SallerWindow : Window, INotifyPropertyChanged, IReactiveObj
         try
         {
             string orderNumber = $"{new Random().Next(10000000, 99999999)}/{DateTime.Now:dd.MM.yyyy}";
-            Models.Order newOrder = new Models.Order()
+            Model.Order newOrder = new Model.Order()
             {
                 ClientId = SelectedClient.ClientId,
                 Time = TimeOnly.FromDateTime(DateTime.Now),
                 StartDate = DateOnly.FromDateTime(DateTime.Now),
                 Status = "Новая",
-                RentTime = SelectedServices.Max(service => service.RentTime),
                 OrderCode = orderNumber
             };
 
@@ -203,7 +202,11 @@ public partial class SallerWindow : Window, INotifyPropertyChanged, IReactiveObj
 
             await _databaseContext.SaveChangesAsync();
             GenerateOrderPdfDocument(newOrder);
-            new BarcodeWindow(newOrder.OrderId, newOrder.RentTime ?? 30).Show();
+            
+            // Получаем максимальное время аренды из выбранных услуг
+            int maxRentTime = SelectedServices.Max(s => s.RentTime);
+            new BarcodeWindow(newOrder.OrderId, maxRentTime).Show();
+            
             Close();
         }
         catch (Exception exception)
@@ -212,7 +215,7 @@ public partial class SallerWindow : Window, INotifyPropertyChanged, IReactiveObj
         }
     }
 
-    private void GenerateOrderPdfDocument(Models.Order order)
+    private void GenerateOrderPdfDocument(Model.Order order)
     {
         string documentsDirectoryPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
         string pdfFilePath = Path.Combine(documentsDirectoryPath, $"Заказ_{order.OrderCode.Replace("/", "_")}.pdf");
