@@ -1,15 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "00Xw2wVTWUo=",
+  "dgSpecHash": "kbsa31SXsOB75wuyQXMJ2eIG0aurW0QBVFJN56nj8vGSLKfWVYKbhl3cDS3ygxSRKDHYulpX7RbxsZMLk6IRMg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\IVAN\\RiderProjects\\demo_hard\\Libary\\Libary.csproj",
-  "expectedPackageFiles": [
-    "C:\\Users\\IVAN\\.nuget\\packages\\avalonia\\11.1.3\\avalonia.11.1.3.nupkg.sha512",
-    "C:\\Users\\IVAN\\.nuget\\packages\\avalonia.buildservices\\0.0.29\\avalonia.buildservices.0.0.29.nupkg.sha512",
-    "C:\\Users\\IVAN\\.nuget\\packages\\avalonia.remote.protocol\\11.1.3\\avalonia.remote.protocol.11.1.3.nupkg.sha512",
-    "C:\\Users\\IVAN\\.nuget\\packages\\dialoghost.avalonia\\0.8.1\\dialoghost.avalonia.0.8.1.nupkg.sha512",
-    "C:\\Users\\IVAN\\.nuget\\packages\\messagebox.avalonia\\3.2.0\\messagebox.avalonia.3.2.0.nupkg.sha512",
-    "C:\\Users\\IVAN\\.nuget\\packages\\microcom.runtime\\0.11.0\\microcom.runtime.0.11.0.nupkg.sha512"
-  ],
+  "projectFilePath": "C:\\Users\\Class_Student\\Source\\Repos\\demo_hard\\Libary\\Libary.csproj",
+  "expectedPackageFiles": [],
   "logs": []
 }
