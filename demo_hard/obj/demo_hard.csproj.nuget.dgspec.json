@@ -1,20 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Class_Student\\Source\\Repos\\demo_hard\\demo_hard\\demo_hard.csproj": {}
+    "C:\\Users\\IVAN\\RiderProjects\\Blagodat\\demo_hard\\demo_hard.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Class_Student\\Source\\Repos\\demo_hard\\demo_hard\\demo_hard.csproj": {
+    "C:\\Users\\IVAN\\RiderProjects\\Blagodat\\demo_hard\\demo_hard.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Class_Student\\Source\\Repos\\demo_hard\\demo_hard\\demo_hard.csproj",
+        "projectUniqueName": "C:\\Users\\IVAN\\RiderProjects\\Blagodat\\demo_hard\\demo_hard.csproj",
         "projectName": "demo_hard",
-        "projectPath": "C:\\Users\\Class_Student\\Source\\Repos\\demo_hard\\demo_hard\\demo_hard.csproj",
-        "packagesPath": "C:\\Users\\Class_Student\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Class_Student\\Source\\Repos\\demo_hard\\demo_hard\\obj\\",
+        "projectPath": "C:\\Users\\IVAN\\RiderProjects\\Blagodat\\demo_hard\\demo_hard.csproj",
+        "packagesPath": "C:\\Users\\IVAN\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\IVAN\\RiderProjects\\Blagodat\\demo_hard\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\Class_Student\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\IVAN\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -22,6 +26,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -34,11 +39,69 @@
           "warnAsError": [
             "NU1605"
           ]
-        }
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.200"
       },
       "frameworks": {
         "net9.0": {
           "targetAlias": "net9.0",
+          "dependencies": {
+            "Avalonia": {
+              "target": "Package",
+              "version": "[11.2.1, )"
+            },
+            "Avalonia.Desktop": {
+              "target": "Package",
+              "version": "[11.2.1, )"
+            },
+            "Avalonia.Diagnostics": {
+              "target": "Package",
+              "version": "[11.2.1, )"
+            },
+            "Avalonia.Fonts.Inter": {
+              "target": "Package",
+              "version": "[11.2.1, )"
+            },
+            "Avalonia.Themes.Fluent": {
+              "target": "Package",
+              "version": "[11.2.1, )"
+            },
+            "MessageBox.Avalonia": {
+              "target": "Package",
+              "version": "[3.2.0, )"
+            },
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[8.0.10, )"
+            },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[8.0.10, )"
+            },
+            "Npgsql.EntityFrameworkCore.PostgreSQL": {
+              "target": "Package",
+              "version": "[8.0.10, )"
+            },
+            "ReactiveUI": {
+              "target": "Package",
+              "version": "[20.2.45, )"
+            },
+            "iTextSharp": {
+              "target": "Package",
+              "version": "[5.5.13.4, )"
+            },
+            "xunit": {
+              "target": "Package",
+              "version": "[2.9.3, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
@@ -50,7 +113,12 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.302\\RuntimeIdentifierGraph.json"
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.200/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

@@ -49,7 +49,7 @@ public class AdditionalTests
             new TimeSpan(11, 0, 0),
             30);
 
-        // Only 09:00-09:30 and 09:30-10:00 should be available
+       
         Assert.AreEqual(2, result.Length);
         Assert.AreEqual("09:00-09:30", result[0]);
         Assert.AreEqual("09:30-10:00", result[1]);
